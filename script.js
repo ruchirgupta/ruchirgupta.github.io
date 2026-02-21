@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="highlight">resume</span>     - Download my resume (PDF)<br>
                 <span class="highlight">contact</span>    - How to reach me<br>
                 <span class="highlight">clear</span>      - Clear terminal output<br>
+                <span class="highlight">exit</span>       - Close the current tab<br>
                 <br>
             `);
         },
@@ -199,6 +200,28 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        },
+        'exit': () => {
+            appendOutput(`
+                <br>
+                <span class="highlight">Terminating session...</span><br>
+                Connection closed.<br>
+                <br>
+            `);
+            setTimeout(() => {
+                // Browsers often block window.close() unless opened by script, so we handle that case.
+                try {
+                    window.close();
+                } catch (e) { }
+
+                // If the window is still open after a moment, display a message.
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        appendOutput('<span class="warning">Your browser prevented auto-closing the tab. Please close it manually (Ctrl+W or Cmd+W).</span><br><br>');
+                        scrollToBottom();
+                    }
+                }, 200);
+            }, 800);
         }
     };
 
