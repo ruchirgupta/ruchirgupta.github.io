@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Terminal Aesthetic Reset
+   ========================================================================== */
+:root {
+    --bg-color: #0c0c0c;
+    --text-primary: #00ff41;
+    /* Classic hacker green */
+    --text-secondary: #cccccc;
+    --text-highlight: #ffffff;
+    --color-user: #00ff41;
+    --color-path: #3b8eea;
+    /* Blue for directory path */
+    --color-error: #ff3333;
+    --color-warning: #ffcc00;
+
+    --font-terminal: 'Ubuntu Mono', 'Courier New', Courier, monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Disable selection highlighting unless needed */
+    user-select: text;
+}
+
+::-moz-selection {
+    background: var(--text-primary);
+    color: var(--bg-color);
+}
+
+::selection {
+    background: var(--text-primary);
+    color: var(--bg-color);
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-secondary);
+    font-family: var(--font-terminal);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden;
+    /* Hide body scroll, handle scroll in terminal container */
+}
+
+/* Custom Scrollbar for terminal vibe */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111;
+    border-left: 1px solid #333;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* ==========================================================================
+   Terminal Layout
+   ========================================================================== */
+.terminal {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hide focus outline on the main container */
+.terminal:focus {
+    outline: none;
+}
+
+.output {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+}
+
+/* Individual output blocks */
+.block {
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Styling for specific elements in output */
+h1,
+h2,
+h3 {
+    color: var(--text-highlight);
+    font-weight: 700;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.ascii-art {
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.highlight {
+    color: var(--text-highlight);
+}
+
+.success {
+    color: var(--text-primary);
+}
+
+.error {
+    color: var(--color-error);
+}
+
+.warning {
+    color: var(--color-warning);
+}
+
+.blue {
+    color: var(--color-path);
+}
+
+a {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li::before {
+    content: "➜ ";
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Input Line & Cursor
+   ========================================================================== */
+.input-line {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.prompt {
+    margin-right: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.prompt .user {
+    color: var(--color-user);
+}
+
+.prompt .path {
+    color: var(--color-path);
+}
+
+.command-input {
+    flex: 1;
+    background: transparent;
+    color: var(--text-highlight);
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+    caret-color: var(--text-primary);
+}
+
+.command-input:focus {
+    outline: none;
+}
+
+/* ==========================================================================
+   Mobile Adjustments
+   ========================================================================== */
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+
+    .terminal {
+        padding: 10px;
+    }
+
+    .ascii-art {
+        font-size: 10px;
+    }
+
+    /* Prevent ASCII wrap on small screens */
+}
