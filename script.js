@@ -195,8 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `);
             // Trigger the download programmatically
             const link = document.createElement('a');
-            link.href = 'Ruchir Gupta - Software Engineer - Resume.pdf';
-            link.download = 'Ruchir Gupta - Software Engineer - Resume.pdf';
+            link.href = 'RuchirGupta-SoftwareEngineer.pdf';
+            link.download = 'RuchirGupta-SoftwareEngineer.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
