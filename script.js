@@ -1,19 +1,20 @@
 /**
- * RUCHIR GUPTA - APPLE-INSPIRED 3D EXPERIENCE ENGINE
+ * RUCHIR GUPTA - LINUX WORKSTATION & CYBER TERMINAL ENGINE
  * 
- * 1. Three.js Studio Titanium 3D Engine (Sculpted geometry, studio 3-point lighting, stardust)
- * 2. Pure Web Audio Haptic Tap Synthesizer (Subtle Apple-grade feedback)
- * 3. 3D Perspective Tilt Physics Engine
- * 4. macOS Developer Terminal (Clean CLI Emulator)
- * 5. Bento Grid & Capabilities Filtering
+ * 1. Web Audio Mechanical Switch Synthesizer (Authentic Terminal Audio)
+ * 2. 3D Linux Cyber Tesseract & Matrix Particle Engine (Three.js)
+ * 3. Polybar Live Telemetry Ticker (Uptime, Clock, CPU Load)
+ * 4. Linux Terminal Window CLI Emulator
+ * 5. Capabilities Matrix Filter
+ * 6. Responsive Polybar Navigation
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ==========================================================================
-       1. WEB AUDIO API - SUBTLE HAPTIC TAP SYNTHESIZER
+       1. WEB AUDIO API - MECHANICAL TERMINAL CLICK SYNTHESIZER
        ========================================================================== */
-    class HapticAudioEngine {
+    class TerminalAudioEngine {
         constructor() {
             this.ctx = null;
             this.enabled = false;
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         init() {
-            const savedPref = localStorage.getItem('rg_apple_sound');
+            const savedPref = localStorage.getItem('rg_linux_sound');
             if (savedPref === 'true') {
                 this.enabled = true;
             }
@@ -43,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle() {
             this.ensureContext();
             this.enabled = !this.enabled;
-            localStorage.setItem('rg_apple_sound', this.enabled ? 'true' : 'false');
+            localStorage.setItem('rg_linux_sound', this.enabled ? 'true' : 'false');
             this.updateUi();
             if (this.enabled) {
-                this.playTap(600);
+                this.playClick(800);
             }
             return this.enabled;
         }
@@ -68,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Extremely subtle Apple-style haptic tap click
-        playTap(freq = 520) {
+        playClick(freq = 600) {
             if (!this.enabled) return;
             try {
                 this.ensureContext();
@@ -77,50 +77,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
-                osc.type = 'sine';
+                osc.type = 'triangle';
 
                 osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.035);
+                osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.025);
 
-                gain.gain.setValueAtTime(0.018, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.035);
+                gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.025);
 
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
 
                 osc.start();
-                osc.stop(this.ctx.currentTime + 0.035);
+                osc.stop(this.ctx.currentTime + 0.025);
             } catch (e) { }
         }
 
-        playHover() {
-            this.playTap(750);
-        }
-
         playKey() {
-            this.playTap(380 + Math.random() * 50);
+            this.playClick(420 + Math.random() * 80);
         }
     }
 
-    const hapticAudio = new HapticAudioEngine();
+    const termAudio = new TerminalAudioEngine();
 
     const soundToggleBtn = document.getElementById('sound-toggle');
     if (soundToggleBtn) {
-        soundToggleBtn.addEventListener('click', () => hapticAudio.toggle());
+        soundToggleBtn.addEventListener('click', () => termAudio.toggle());
     }
 
     document.querySelectorAll('[data-sound="hover"]').forEach(el => {
-        el.addEventListener('mouseenter', () => hapticAudio.playHover());
+        el.addEventListener('mouseenter', () => termAudio.playClick(900));
     });
     document.querySelectorAll('[data-sound="tap"]').forEach(el => {
-        el.addEventListener('click', () => hapticAudio.playTap(580));
+        el.addEventListener('click', () => termAudio.playClick(650));
     });
 
 
     /* ==========================================================================
-       2. THREE.JS STUDIO TITANIUM 3D ENGINE
+       2. THREE.JS 3D LINUX CYBER TESSERACT & MATRIX PARTICLE FIELD
        ========================================================================== */
-    class StudioUniverse3D {
+    class LinuxCyberMatrix3D {
         constructor() {
             this.canvas = document.getElementById('webgl-canvas');
             if (!this.canvas || typeof THREE === 'undefined') {
@@ -132,12 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         init() {
-            // Scene & Camera
+            // Scene Setup
             this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.scene.fog = new THREE.FogExp2(0x050508, 0.025);
+
+            this.camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 1000);
             this.camera.position.z = 18;
 
-            // WebGL Renderer
             this.renderer = new THREE.WebGLRenderer({
                 canvas: this.canvas,
                 alpha: true,
@@ -146,10 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
             this.renderer.setSize(window.innerWidth, window.innerHeight);
             this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Studio Objects
-            this.createStudioLighting();
-            this.createTitaniumSculpture();
-            this.createStardustField();
+            // Lighting
+            this.createLighting();
+
+            // 3D Linux Cyber Wireframe Geometry
+            this.createCyberTesseract();
+
+            // Matrix Data Particle Stream
+            this.createMatrixParticles();
 
             // Interactions
             this.mouseX = 0;
@@ -162,90 +163,125 @@ document.addEventListener('DOMContentLoaded', () => {
             this.scrollProgress = 0;
             this.clock = new THREE.Clock();
 
-            // Bind Events
             this.bindEvents();
-
-            // Animation Loop
             this.animate();
         }
 
-        createStudioLighting() {
-            // Soft Studio Ambient Fill
-            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+        createLighting() {
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
             this.scene.add(ambient);
 
-            // Key Light (Warm Neutral Key)
-            this.keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
-            this.keyLight.position.set(12, 14, 12);
-            this.scene.add(this.keyLight);
+            // Phosphor Green Key Light
+            this.keyGreen = new THREE.DirectionalLight(0x00ff66, 2.0);
+            this.keyGreen.position.set(12, 14, 10);
+            this.scene.add(this.keyGreen);
 
-            // Rim Light 1 (Apple Electric Blue)
-            this.rimBlue = new THREE.PointLight(0x2997ff, 2.2, 50);
-            this.rimBlue.position.set(-14, -8, 10);
-            this.scene.add(this.rimBlue);
-
-            // Rim Light 2 (Apple Indigo Accent)
-            this.rimIndigo = new THREE.PointLight(0x5e5ce6, 1.8, 50);
-            this.rimIndigo.position.set(10, -10, -8);
-            this.scene.add(this.rimIndigo);
+            // Electric Cyan Rim Light
+            this.rimCyan = new THREE.PointLight(0x00f0ff, 2.5, 45);
+            this.rimCyan.position.set(-14, -8, 8);
+            this.scene.add(this.rimCyan);
         }
 
-        createTitaniumSculpture() {
-            this.sculptureGroup = new THREE.Group();
+        createCyberTesseract() {
+            this.coreGroup = new THREE.Group();
 
-            // Continuous, Silky Sculpted Torus Knot Geometry
-            const knotGeo = new THREE.TorusKnotGeometry(3.3, 0.9, 128, 32, 2, 3);
-            const knotMat = new THREE.MeshStandardMaterial({
-                color: 0xdedee8,
-                metalness: 0.88,
-                roughness: 0.2,
-                wireframe: false
+            // Outer Wireframe Tesseract Cage (Dodecahedron)
+            const outerGeo = new THREE.DodecahedronGeometry(3.6, 0);
+            const outerMat = new THREE.MeshBasicMaterial({
+                color: 0x00ff66,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.75
             });
-            this.knotMesh = new THREE.Mesh(knotGeo, knotMat);
-            this.sculptureGroup.add(this.knotMesh);
+            this.outerCage = new THREE.Mesh(outerGeo, outerMat);
+            this.coreGroup.add(this.outerCage);
 
-            // Subtle Internal Luminous Orb
-            const innerGeo = new THREE.SphereGeometry(1.4, 28, 28);
+            // Inner Wireframe Icosahedron (Cyan)
+            const innerGeo = new THREE.IcosahedronGeometry(2.4, 0);
             const innerMat = new THREE.MeshBasicMaterial({
-                color: 0xffffff,
+                color: 0x00f0ff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.65
+            });
+            this.innerCage = new THREE.Mesh(innerGeo, innerMat);
+            this.coreGroup.add(this.innerCage);
+
+            // Concentric Coordinate Gyro Rings
+            const ringGeo1 = new THREE.TorusGeometry(4.8, 0.03, 16, 80);
+            const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00ff66, transparent: true, opacity: 0.35 });
+            this.ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+            this.coreGroup.add(this.ring1);
+
+            const ringGeo2 = new THREE.TorusGeometry(5.2, 0.025, 16, 80);
+            const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.3 });
+            this.ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+            this.ring2.rotation.x = Math.PI / 3;
+            this.coreGroup.add(this.ring2);
+
+            // Pulsing Matrix Core Node
+            const coreGeo = new THREE.SphereGeometry(0.9, 24, 24);
+            const coreMat = new THREE.MeshBasicMaterial({
+                color: 0x00ff66,
                 transparent: true,
                 opacity: 0.4
             });
-            this.innerOrb = new THREE.Mesh(innerGeo, innerMat);
-            this.sculptureGroup.add(this.innerOrb);
+            this.centerNode = new THREE.Mesh(coreGeo, coreMat);
+            this.coreGroup.add(this.centerNode);
 
-            // Positioning
-            if (window.innerWidth > 1024) {
-                this.sculptureGroup.position.set(6.6, 0.3, 0);
-            } else {
-                this.sculptureGroup.position.set(0, 1.2, 0);
-            }
-
-            this.scene.add(this.sculptureGroup);
+            this.updateResponsivePosition();
+            this.scene.add(this.coreGroup);
         }
 
-        createStardustField() {
-            const count = 900;
+        createMatrixParticles() {
+            const count = 1200;
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            const green = new THREE.Color(0x00ff66);
+            const cyan = new THREE.Color(0x00f0ff);
+            const amber = new THREE.Color(0xffb454);
 
             for (let i = 0; i < count; i++) {
-                positions[i * 3] = (Math.random() - 0.5) * 75;
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 75;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 55;
+                positions[i * 3] = (Math.random() - 0.5) * 80;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 60;
+
+                const choice = Math.random();
+                const col = choice < 0.6 ? green : (choice < 0.9 ? cyan : amber);
+                colors[i * 3] = col.r;
+                colors[i * 3 + 1] = col.g;
+                colors[i * 3 + 2] = col.b;
             }
 
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
             const material = new THREE.PointsMaterial({
-                color: 0xffffff,
                 size: 0.08,
+                vertexColors: true,
                 transparent: true,
-                opacity: 0.45
+                opacity: 0.5
             });
 
-            this.stardust = new THREE.Points(geometry, material);
-            this.scene.add(this.stardust);
+            this.matrixParticles = new THREE.Points(geometry, material);
+            this.scene.add(this.matrixParticles);
+        }
+
+        updateResponsivePosition() {
+            if (!this.coreGroup) return;
+
+            if (window.innerWidth > 1024) {
+                this.coreGroup.position.set(6.8, 0.2, 0);
+                this.coreGroup.scale.set(1, 1, 1);
+            } else if (window.innerWidth > 768) {
+                this.coreGroup.position.set(0, 1.2, 0);
+                this.coreGroup.scale.set(0.85, 0.85, 0.85);
+            } else {
+                this.coreGroup.position.set(0, 1.0, 0);
+                this.coreGroup.scale.set(0.72, 0.72, 0.72);
+            }
         }
 
         bindEvents() {
@@ -254,12 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.camera.updateProjectionMatrix();
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-                if (window.innerWidth > 1024) {
-                    this.sculptureGroup.position.set(6.6, 0.3, 0);
-                } else {
-                    this.sculptureGroup.position.set(0, 1.2, 0);
-                }
+                this.updateResponsivePosition();
             });
 
             window.addEventListener('mousemove', (e) => {
@@ -272,10 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.scrollProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
             }, { passive: true });
 
-            // Interactive Dragging on 3D canvas
+            // Interactive 3D Dragging
             const container = document.getElementById('webgl-container');
             if (container) {
                 const onPointerDown = (e) => {
+                    if (e.pointerType === 'touch' && window.innerWidth <= 768) return;
                     this.isDragging = true;
                     this.prevMouse = { x: e.clientX, y: e.clientY };
                     this.dragVelocity = { x: 0, y: 0 };
@@ -286,9 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const deltaX = e.clientX - this.prevMouse.x;
                     const deltaY = e.clientY - this.prevMouse.y;
 
-                    this.dragVelocity = { x: deltaX * 0.004, y: deltaY * 0.004 };
-                    this.sculptureGroup.rotation.y += this.dragVelocity.x;
-                    this.sculptureGroup.rotation.x += this.dragVelocity.y;
+                    this.dragVelocity = { x: deltaX * 0.005, y: deltaY * 0.005 };
+                    this.coreGroup.rotation.y += this.dragVelocity.x;
+                    this.coreGroup.rotation.x += this.dragVelocity.y;
 
                     this.prevMouse = { x: e.clientX, y: e.clientY };
                 };
@@ -306,41 +338,47 @@ document.addEventListener('DOMContentLoaded', () => {
         animate() {
             requestAnimationFrame(() => this.animate());
 
-            const delta = this.clock.getDelta();
             const elapsed = this.clock.getElapsedTime();
 
-            // Smooth Sculpture Rotation
-            if (this.knotMesh) {
-                this.knotMesh.rotation.x += 0.004;
-                this.knotMesh.rotation.y += 0.006;
+            // Rotations
+            if (this.outerCage) {
+                this.outerCage.rotation.x += 0.004;
+                this.outerCage.rotation.y += 0.006;
             }
 
-            if (this.innerOrb) {
-                const scale = 1 + Math.sin(elapsed * 2) * 0.08;
-                this.innerOrb.scale.set(scale, scale, scale);
+            if (this.innerCage) {
+                this.innerCage.rotation.x -= 0.005;
+                this.innerCage.rotation.y -= 0.004;
             }
 
-            if (this.stardust) {
-                this.stardust.rotation.y = elapsed * 0.008;
+            if (this.ring1) this.ring1.rotation.z += 0.003;
+            if (this.ring2) this.ring2.rotation.y -= 0.004;
+
+            if (this.centerNode) {
+                const scale = 1 + Math.sin(elapsed * 2.5) * 0.12;
+                this.centerNode.scale.set(scale, scale, scale);
             }
 
-            // Drag momentum decay
+            if (this.matrixParticles) {
+                this.matrixParticles.rotation.y = elapsed * 0.008;
+            }
+
+            // Inertial decay
             if (!this.isDragging) {
-                this.dragVelocity.x *= 0.95;
-                this.dragVelocity.y *= 0.95;
-                this.sculptureGroup.rotation.y += this.dragVelocity.x;
-                this.sculptureGroup.rotation.x += this.dragVelocity.y;
+                this.dragVelocity.x *= 0.94;
+                this.dragVelocity.y *= 0.94;
+                this.coreGroup.rotation.y += this.dragVelocity.x;
+                this.coreGroup.rotation.x += this.dragVelocity.y;
             }
 
-            // Scroll Parallax Camera Transitions
+            // Parallax
             const targetCamZ = 18 - this.scrollProgress * 5;
-            const targetCamY = -this.scrollProgress * 7;
+            const targetCamY = -this.scrollProgress * 6;
             this.camera.position.z += (targetCamZ - this.camera.position.z) * 0.05;
             this.camera.position.y += (targetCamY - this.camera.position.y) * 0.05;
 
-            // Gentle Fluid Mouse Parallax
-            this.targetRotX = this.mouseY * 0.18;
-            this.targetRotY = this.mouseX * 0.25;
+            this.targetRotX = this.mouseY * 0.16;
+            this.targetRotY = this.mouseX * 0.22;
             this.scene.rotation.x += (this.targetRotX - this.scene.rotation.x) * 0.04;
             this.scene.rotation.y += (this.targetRotY - this.scene.rotation.y) * 0.04;
 
@@ -348,53 +386,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const studioUniverse = new StudioUniverse3D();
+    new LinuxCyberMatrix3D();
 
 
     /* ==========================================================================
-       3. 3D PERSPECTIVE TILT CARDS ENGINE
+       3. POLYBAR LIVE TELEMETRY TICKER (UPTIME, CLOCK, LOAD)
        ========================================================================== */
-    class AppleTiltEngine {
-        constructor() {
-            this.cards = document.querySelectorAll('[data-tilt]');
-            this.init();
+    function initPolybarTelemetry() {
+        const timeEl = document.getElementById('poly-clock');
+        const cpuEl = document.getElementById('poly-cpu');
+
+        function updateClock() {
+            if (timeEl) {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+                timeEl.textContent = `${h}:${m}:${s}`;
+            }
         }
 
-        init() {
-            if (!this.cards.length) return;
-
-            this.cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => this.handleMove(e, card));
-                card.addEventListener('mouseleave', () => this.handleLeave(card));
-            });
+        function updateCpu() {
+            if (cpuEl) {
+                const cpu = (1.2 + Math.random() * 2.2).toFixed(1);
+                cpuEl.textContent = `CPU: ${cpu}%`;
+            }
         }
 
-        handleMove(e, card) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const rotateX = ((y - centerY) / centerY) * -6;
-            const rotateY = ((x - centerX) / centerX) * 6;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
-        }
-
-        handleLeave(card) {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        }
+        setInterval(updateClock, 1000);
+        setInterval(updateCpu, 3500);
+        updateClock();
+        updateCpu();
     }
 
-    new AppleTiltEngine();
+    initPolybarTelemetry();
 
 
     /* ==========================================================================
-       4. macOS DEVELOPER TERMINAL (CLEAN CLI MODAL)
+       4. LINUX TERMINAL WINDOW CLI EMULATOR
        ========================================================================== */
-    class MacosTerminalModal {
+    class LinuxTerminalModal {
         constructor() {
             this.modal = document.getElementById('terminal-modal');
             this.output = document.getElementById('modal-terminal-output');
@@ -451,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (this.input) {
                 this.input.addEventListener('keydown', (e) => {
-                    hapticAudio.playKey();
+                    termAudio.playKey();
                     if (e.key === 'Enter') {
                         const cmd = this.input.value.trim();
                         if (cmd) {
@@ -494,11 +525,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.querySelectorAll('.quick-chip').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    hapticAudio.playTap(620);
+                    termAudio.playClick(720);
                     const cmd = btn.getAttribute('data-cmd');
                     if (cmd) {
                         this.execute(cmd);
-                        if (this.input) this.input.focus();
+                        if (this.input && window.innerWidth > 768) this.input.focus();
                     }
                 });
             });
@@ -512,16 +543,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         open() {
             this.modal.classList.add('open');
-            hapticAudio.playTap(650);
+            termAudio.playClick(650);
             setTimeout(() => {
-                if (this.input) this.input.focus();
+                if (this.input && window.innerWidth > 768) this.input.focus();
                 this.scrollToBottom();
             }, 100);
         }
 
         close() {
             this.modal.classList.remove('open');
-            hapticAudio.playTap(450);
+            termAudio.playClick(450);
         }
 
         toggle() {
@@ -541,9 +572,8 @@ document.addEventListener('DOMContentLoaded', () => {
         printInitialBanner() {
             this.output.innerHTML = `
                 <div class="term-block">
-                    <span class="term-highlight">Last login: Today on ttys001</span><br>
-                    Welcome to Ruchir Gupta's Developer Terminal.<br>
-                    Type <span class="term-accent">'help'</span> or select any command above to begin.<br>
+                    <span class="text-green">Linux ruchir-workstation 6.8.0-enterprise #1 SMP PREEMPT_DYNAMIC x86_64</span><br>
+                    Type <span class="term-accent">'help'</span> or <span class="term-accent">'neofetch'</span> to display system diagnostics.<br>
                 </div>
             `;
         }
@@ -553,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
             block.className = 'term-block';
             block.innerHTML = `
                 <div class="term-prompt-line">
-                    <span class="user-txt">ruchir</span><span class="at-txt">@</span><span class="host-txt">portfolio</span> <span class="path-txt">~</span> % <span class="text-white">${cmd}</span>
+                    <span class="text-green">ruchir@arch-server</span>:<span class="text-amber">~</span>$ <span class="text-white">${cmd}</span>
                 </div>
             `;
             this.output.appendChild(block);
@@ -575,10 +605,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.commands[cmd]();
             } else if (cmd === 'clear') {
                 this.output.innerHTML = '';
+            } else if (cmd === 'uname' || cmd === 'uname -a') {
+                this.appendOutput('Linux ruchir-enterprise 6.8.0-42-generic #42-Ubuntu SMP PREEMPT_DYNAMIC x86_64 GNU/Linux');
+            } else if (cmd === 'uptime') {
+                this.appendOutput('up 5 years, 142 days, 3 users, load average: 0.12, 0.08, 0.05');
             } else if (cmd === 'sudo') {
-                this.appendOutput('<span class="text-secondary">Password: **********<br>Permission granted. Welcome, administrator.</span>');
+                this.appendOutput('<span class="text-secondary">[sudo] password for ruchir: **********<br>ruchir is in the sudoers file. This incident will not be reported.</span>');
             } else {
-                this.appendOutput(`zsh: command not found: ${rawCmd}. Type <span class="term-accent">'help'</span> for available commands.`);
+                this.appendOutput(`bash: command not found: ${rawCmd}. Type <span class="term-accent">'help'</span> for available commands.`);
             }
             this.scrollToBottom();
         }
@@ -587,70 +621,77 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 'help': () => {
                     this.appendOutput(`
-                        <span class="term-highlight">Available Commands:</span><br>
-                        &bull; <span class="term-accent">whoami</span>     - Professional overview &amp; summary<br>
-                        &bull; <span class="term-accent">experience</span> - Work history (Accenture, EV Software, iEnergizer)<br>
-                        &bull; <span class="term-accent">projects</span>   - Core architectural systems &amp; AI engines<br>
-                        &bull; <span class="term-accent">skills</span>     - Technical capabilities matrix<br>
-                        &bull; <span class="term-accent">resume</span>     - Download resume (PDF)<br>
-                        &bull; <span class="term-accent">contact</span>    - Direct links to LinkedIn &amp; GitHub<br>
-                        &bull; <span class="term-accent">clear</span>      - Clear terminal window<br>
-                        &bull; <span class="term-accent">exit</span>       - Close developer terminal<br>
+                        <span class="term-highlight">Builtin Linux Commands:</span><br>
+                        &bull; <span class="term-accent">neofetch</span>   - Print system telemetry &amp; architecture summary<br>
+                        &bull; <span class="term-accent">whoami</span>     - Engineer identity &amp; focus<br>
+                        &bull; <span class="term-accent">experience</span> - Career history (Accenture, EV Software, iEnergizer)<br>
+                        &bull; <span class="term-accent">projects</span>   - Production microservices &amp; AI engines<br>
+                        &bull; <span class="term-accent">skills</span>     - Capabilities matrix<br>
+                        &bull; <span class="term-accent">resume</span>     - Fetch PDF curriculum vitae<br>
+                        &bull; <span class="term-accent">contact</span>    - Communication sockets (LinkedIn, GitHub)<br>
+                        &bull; <span class="term-accent">clear</span>      - Flush terminal buffer<br>
+                        &bull; <span class="term-accent">exit</span>       - Exit CLI session<br>
+                    `);
+                },
+                'neofetch': () => {
+                    this.appendOutput(`
+                        <span class="text-green">       /\\         ruchir@enterprise-arch</span><br>
+                        <span class="text-green">      /  \\        ----------------------</span><br>
+                        <span class="text-green">     /\\   \\       OS:</span> RuchirOS Linux x86_64<br>
+                        <span class="text-green">    /      \\      Host:</span> Accenture High-Concurrency Node<br>
+                        <span class="text-green">   /   ,,   \\     Kernel:</span> 6.8.0-distributed-sys<br>
+                        <span class="text-green">  /   |  |  -\\    Uptime:</span> 5+ Years Active<br>
+                        <span class="text-green"> /_-''    ''-_\\   Packages:</span> 16 (Node.js, MSSQL, React, Redis)<br>
+                        <span class="text-green">                  Shell:</span> zsh 5.9 (powerlevel10k)<br>
+                        <span class="text-green">                  Throughput:</span> 500+ WebSocket Connections<br>
                     `);
                 },
                 'whoami': () => {
                     this.appendOutput(`
                         <span class="term-highlight">Ruchir Gupta</span><br>
-                        <span class="text-secondary">Senior Software Engineer &bull; Backend &amp; Distributed Systems</span><br>
-                        Experience: 5+ Years<br>
-                        Current: Accenture (Senior Software Engineer - Backend Developer)<br><br>
-                        Specialized in high-concurrency Node.js, real-time WebSocket systems, MS SQL optimization, and enterprise Azure OpenAI automation.<br><br>
-                        &bull; LinkedIn: <a href="https://www.linkedin.com/in/ruxchir" target="_blank">linkedin.com/in/ruxchir</a><br>
-                        &bull; GitHub: <a href="https://github.com/ruchirgupta" target="_blank">github.com/ruchirgupta</a><br>
+                        <span class="text-secondary">Senior Software Engineer &bull; Backend Developer</span><br>
+                        Organization: Accenture (12/2024 &mdash; Present)<br>
+                        Core Focus: Distributed Systems, High-Concurrency WebSockets, MS SQL Tuning, Azure OpenAI Automation.<br>
+                        Experience: 5+ Years in production enterprise software.<br>
                     `);
                 },
                 'experience': () => {
                     this.appendOutput(`
-                        <span class="term-highlight">Professional Experience</span><br><br>
-                        <span class="term-accent">[12/2024 - Present] Senior Software Engineer @ Accenture</span><br>
+                        <span class="term-highlight">Production Career Log</span><br><br>
+                        <span class="term-accent">[12/2024 - Present] Accenture &mdash; Senior Software Engineer</span><br>
                         &bull; Automated Chat Auditing Engine (OpenAI API + MS SQL, -70% QA overhead).<br>
-                        &bull; Real-time Break Management Portal (WebSockets, 500+ concurrent agents).<br>
-                        &bull; AI Rapid Response Ticket Resolution Engine (Azure OpenAI, -60% response time).<br>
-                        &bull; Microsoft Teams Voice Bot for automated IT support triage.<br><br>
-                        <span class="term-accent">[08/2022 - 12/2024] Software Engineer - Full Stack @ EV Software Solutions</span><br>
-                        &bull; Accelerated team dev velocity by 55% using standardized React patterns.<br>
-                        &bull; Led enterprise customer platform driving a 45% lift in engagement.<br>
-                        &bull; Improved UI performance by 60% and slashed load times by 40%.<br>
-                        &bull; Integrated DataDog, Sentry observability, and full RBAC security.<br><br>
-                        <span class="term-accent">[09/2020 - 08/2022] CS Executive &amp; Operations @ iEnergizer</span><br>
-                        &bull; Online game operations, UX balancing, and asset integration.<br>
+                        &bull; Real-time Break Management Portal (WebSockets, 500+ live concurrent nodes).<br>
+                        &bull; AI Rapid Response Resolution Engine (Azure OpenAI, -60% latency).<br>
+                        &bull; Teams Voice Bot IT Assistant.<br><br>
+                        <span class="term-accent">[08/2022 - 12/2024] EV Software Solutions &mdash; Full Stack Engineer</span><br>
+                        &bull; Scaled React architecture for dev team of 25 engineers (+55% velocity).<br>
+                        &bull; Spearheaded enterprise platform (+45% engagement lift).<br>
+                        &bull; Improved UI speed by 60% with custom state lifecycle tuning.<br>
+                        &bull; Integrated DataDog &amp; Sentry observability.<br>
                     `);
                 },
                 'projects': () => {
                     this.appendOutput(`
-                        <span class="term-highlight">Featured Architectural Systems</span><br><br>
-                        1. <span class="term-accent">Chat Sentinel:</span> Automated QA audit engine parsing support chats via OpenAI API &amp; MS SQL (-70% QA overhead).<br>
-                        2. <span class="term-accent">SyncShift:</span> Real-time workforce break portal managing 500+ concurrent agents with WebSockets.<br>
-                        3. <span class="term-accent">ApexResolve:</span> Azure OpenAI tier-1 ticket resolution engine (-60% first response time).<br>
-                        4. <span class="term-accent">Teams VoiceBot:</span> Conversational voice assistant for enterprise internal IT support.<br>
-                        5. <span class="term-accent">OmniPortal:</span> High-scale customer frontend platform built on React/Redux (+45% engagement).<br>
-                        6. <span class="term-accent">Titanium 3D:</span> Sculpted Three.js WebGL experience with studio lighting &amp; Bento grids.<br>
+                        <span class="term-highlight">Deployed Systems</span><br><br>
+                        1. <span class="term-accent">Chat Sentinel:</span> Automated QA audit pipeline via OpenAI API &amp; MS SQL (-70% QA overhead).<br>
+                        2. <span class="term-accent">SyncShift:</span> WebSocket synchronization portal for 500+ concurrent agents.<br>
+                        3. <span class="term-accent">ApexResolve:</span> Azure OpenAI tier-1 ticket resolution pipeline (-60% response time).<br>
+                        4. <span class="term-accent">Teams VoiceBot:</span> Conversational voice bot for enterprise IT triage.<br>
+                        5. <span class="term-accent">OmniPortal:</span> High-velocity React/Redux platform (+45% user engagement).<br>
+                        6. <span class="term-accent">Cyber Tesseract 3D:</span> Hardware-accelerated Three.js WebGL matrix wireframe.<br>
                     `);
                 },
                 'skills': () => {
                     this.appendOutput(`
-                        <span class="term-highlight">Technical Capabilities Matrix</span><br><br>
-                        <span class="text-secondary">[Backend &amp; Systems]</span> Node.js, Express.js, MS SQL, PostgreSQL, WebSockets, RESTful APIs, Microservices.<br>
-                        <span class="text-secondary">[AI &amp; Automation]</span> OpenAI API, Azure OpenAI Services, LLM Workflows, Teams Voice Bots, Automated QA.<br>
-                        <span class="text-secondary">[Frontend Architecture]</span> React.js, Next.js, Redux, TypeScript, JavaScript (ES6+), HTML5/CSS3, Tailwind CSS.<br>
-                        <span class="text-secondary">[Cloud &amp; DevOps]</span> Docker, Azure Cloud, Git/GitHub, CI/CD, DataDog, Sentry, Bash/Zsh.<br>
+                        <span class="term-highlight">Stack Matrix</span><br><br>
+                        [Backend] Node.js, Express.js, MS SQL, PostgreSQL, WebSockets, RESTful APIs.<br>
+                        [AI/LLM] Azure OpenAI, OpenAI API, LLM Triage, Voice Bots, Prompt Engineering.<br>
+                        [Frontend] React.js, Next.js, Redux, TypeScript, Modern CSS/HTML.<br>
+                        [DevOps/Infra] Docker, Azure Cloud, Git/GitHub, CI/CD, DataDog, Sentry, Zsh/Bash.<br>
                     `);
                 },
                 'resume': () => {
-                    this.appendOutput(`
-                        <span class="text-secondary">Initiating download...</span><br>
-                        File: <span class="term-highlight">RuchirGupta-SoftwareEngineer.pdf</span><br>
-                    `);
+                    this.appendOutput('<span class="text-secondary">Initiating wget RuchirGupta-SoftwareEngineer.pdf...</span>');
                     const link = document.createElement('a');
                     link.href = 'RuchirGupta-SoftwareEngineer.pdf';
                     link.download = 'RuchirGupta-SoftwareEngineer.pdf';
@@ -660,21 +701,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 'contact': () => {
                     this.appendOutput(`
-                        <span class="term-highlight">Contact Channels</span><br><br>
+                        <span class="term-highlight">Socket Endpoints:</span><br>
                         &bull; LinkedIn: <a href="https://www.linkedin.com/in/ruxchir" target="_blank">linkedin.com/in/ruxchir</a><br>
                         &bull; GitHub: <a href="https://github.com/ruchirgupta" target="_blank">github.com/ruchirgupta</a><br>
-                        &bull; Resume: <a href="RuchirGupta-SoftwareEngineer.pdf" download="RuchirGupta-SoftwareEngineer.pdf">RuchirGupta-SoftwareEngineer.pdf</a><br>
                     `);
                 },
                 'exit': () => {
-                    this.appendOutput('<span class="text-secondary">Closing terminal session...</span>');
-                    setTimeout(() => this.close(), 250);
+                    this.appendOutput('<span class="text-secondary">Session terminated.</span>');
+                    setTimeout(() => this.close(), 200);
                 }
             };
         }
     }
 
-    new MacosTerminalModal();
+    new LinuxTerminalModal();
 
 
     /* ==========================================================================
@@ -685,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filterPills.forEach(pill => {
         pill.addEventListener('click', () => {
-            hapticAudio.playTap(600);
+            termAudio.playClick(600);
             filterPills.forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
 
@@ -710,36 +750,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ==========================================================================
-       6. NAVBAR SCROLL & ACTIVE SECTION OBSERVER
+       6. POLYBAR MOBILE DRAWER & ACTIVE WORKSPACE OBSERVER
        ========================================================================== */
-    const navbar = document.getElementById('navbar');
     const mobileToggle = document.getElementById('mobile-toggle');
     const navLinks = document.getElementById('nav-links');
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 30) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    }, { passive: true });
-
     if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-            hapticAudio.playTap(550);
+            const isOpen = navLinks.classList.toggle('open');
+            mobileToggle.classList.toggle('active', isOpen);
+            termAudio.playClick(550);
         });
 
         navLinks.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('open');
+                mobileToggle.classList.remove('active');
             });
         });
     }
 
     const sections = document.querySelectorAll('section[id]');
     window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset + 140;
+        const scrollY = window.pageYOffset + 120;
         sections.forEach(current => {
             const sectionHeight = current.offsetHeight;
             const sectionTop = current.offsetTop;
